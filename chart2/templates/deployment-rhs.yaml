@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "reverse-hash-service.fullname" . }}-rhs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "reverse-hash-service.name" . }}-rhs
+  template:
+    metadata:
+      labels:
+        app: {{ include "reverse-hash-service.name" . }}-rhs
+    spec:
+      containers:
+      - name: rhs
+        image: "{{ .Values.rhs.image.repository }}:{{ .Values.rhs.image.tag }}"
+        env:
+        - name: RHS_DB
+          value: "{{ .Values.rhs.env.RHS_DB }}"
+        ports:
+        - containerPort: {{ .Values.rhs.service.port }}

@@ -1,0 +1,31 @@
+rhs:
+  image:
+    repository: 447655722442.dkr.ecr.us-east-1.amazonaws.com/reverse-hash-service
+    tag: latest
+  env:
+    RHS_DB: "host=db password={{ .Values.db.env.POSTGRES_PASSWORD }} user={{ .Values.db.env.POSTGRES_USER }} database=rhs"
+  service:
+    port: 8080
+
+db:
+  image:
+    repository: postgres
+    tag: latest
+  env:
+    POSTGRES_PASSWORD: secret
+    POSTGRES_USER: iden3
+    POSTGRES_DB: rhs
+  persistence:
+    storageClass: gp2
+    size: 5Gi
+
+reverseProxy:
+  image:
+    repository: traefik
+    tag: v2.8
+  service:
+    port: 80
+  volumes:
+    dockerSock: /var/run/docker.sock
+    traefikConfig: /run/containerd/io.containerd.runtime.v2.task/k8s.io/reverse-proxy/.traefik/config
+
