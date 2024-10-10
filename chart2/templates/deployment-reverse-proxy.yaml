@@ -14,19 +14,19 @@ spec:
     spec:
       containers:
       - name: reverse-proxy
-        image: "{{ .Values.reverseProxy.image.repository }}:{{ .Values.reverseProxy.image.tag }}"
+        image: {{ .Values.reverseProxy.image.repository }}:{{ .Values.reverseProxy.image.tag }}
         ports:
         - containerPort: {{ .Values.reverseProxy.service.port }}
         volumeMounts:
         - name: docker-sock
           mountPath: /var/run/docker.sock
         - name: traefik-config
-          mountPath: /etc/traefik
+          mountPath: ./.traefik/config
       volumes:
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
         - name: traefik-config
           hostPath:
-            path: "{{ .Values.reverseProxy.volumes.traefikConfig }}"
+            path: /etc/traefik
 
