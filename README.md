@@ -118,3 +118,72 @@ This project is licensed under either of
 at your option.
 
 
+# Helm deploy on EKS
+# Kubernetes on EKS
+## Create cluster
+```
+eksctl create cluster `
+  --name rhs `
+  --region us-east-1 `
+  --nodegroup-name workers `
+  --node-type t3a.medium `
+  --nodes 1 `
+  --nodes-min 1 `
+  --nodes-max 1 `
+  --managed
+ ```
+ 
+
+## Set kubernetes context on cli
+```
+aws eks --region us-east-1 update-kubeconfig --name rhs
+```
+
+
+## Install helm
+
+# Helm on windows
+## Configure env vars for helm
+```
+Set-Variable -Name APP_INSTANCE_NAME -Value rhs
+Set-Variable -Name NAMESPACE -Value default
+```
+
+## Install helm
+```
+helm install "$APP_INSTANCE_NAME" ./chart `
+--create-namespace --namespace "$NAMESPACE" `
+--set namespace="$NAMESPACE" 
+```
+
+# Enable EBS on EKS
+
+This enables the creation of PersistentVolumes dynamically when PersistentVolumeClaims are used
+
+## Follow instructions 
+
+The instructions on the link are the same as describede below
+https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html
+
+
+## Enable IAM OIDC provider
+```
+eksctl utils associate-iam-oidc-provider --region=eu-central-1 --cluster=YourClusterNameHere --approve
+```
+## Create Amazon EBS CSI driver IAM role
+```
+eksctl create iamserviceaccount `
+  --region us-east-1 `
+  --name ebs-csi-controller-sa `
+  --namespace kube-system `
+  --cluster rhs `
+  --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy `
+  --approve `
+  --role-only `
+  --role-name AmazonEKS_EBS_CSI_DriverRole
+```
+
+## Add the Amazon EBS CSI add-on
+```
+eksctl create addon --name aws-ebs-csi-driver --cluster rhs --service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/AmazonEKS_EBS_CSI_DriverRole --force
+```
