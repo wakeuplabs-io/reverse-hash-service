@@ -17,9 +17,12 @@ db:
     storageClass: gp2
     size: 5Gi
 
-reverseProxy:
-  image:
-    repository: traefik
-    tag: v2.8
+traefik:
+  ports:
+    web:
+      exposedPort: 80
+    websecure:
+      exposedPort: 443
   service:
-    port: 80
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"  # or "alb" based on your setup
