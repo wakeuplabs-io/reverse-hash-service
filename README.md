@@ -119,7 +119,6 @@ at your option.
 
 
 # Helm deploy on EKS
-# Kubernetes on EKS
 ## Create cluster
 ```
 eksctl create cluster `
@@ -148,19 +147,33 @@ kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v3.1/docs/con
 kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v3.1/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
 ```
 
-## Install helm
+# Install helm chart
 
-# Helm on windows
-## Configure env vars for helm
+## Windows
+### Configure env vars for helm
 ```
 Set-Variable -Name APP_INSTANCE_NAME -Value rhs
 Set-Variable -Name NAMESPACE -Value default
 ```
 
-## Install helm
+### Install helm
 ```
 helm install "$APP_INSTANCE_NAME" ./chart `
 --create-namespace --namespace "$NAMESPACE" `
+--set namespace="$NAMESPACE" 
+```
+
+## Linux
+### Configure env vars for helm
+```
+export APP_INSTANCE_NAME=rhs
+export NAMESPACE=default
+```
+
+### Install helm
+```
+helm install "$APP_INSTANCE_NAME" ./chart \
+--create-namespace --namespace "$NAMESPACE" \
 --set namespace="$NAMESPACE" 
 ```
 
@@ -170,13 +183,13 @@ This enables the creation of PersistentVolumes dynamically when PersistentVolume
 
 ## Follow instructions 
 
-The instructions on the link are the same as describede below
+The instructions on the link are the same as described below
 https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html
 
 
 ## Enable IAM OIDC provider
 ```
-eksctl utils associate-iam-oidc-provider --region=eu-central-1 --cluster=rhs --approve
+eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=rhs --approve
 ```
 ## Create Amazon EBS CSI driver IAM role
 ```
