@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+data:
+  init.sql: |
+    CREATE TABLE mt_node (
+        id BIGSERIAL PRIMARY KEY,
+        hash BYTEA NOT NULL UNIQUE CHECK (length(hash) = 32),
+        children BYTEA[]
+    );

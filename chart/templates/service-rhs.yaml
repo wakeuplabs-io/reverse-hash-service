@@ -6,6 +6,6 @@ spec:
   type: ClusterIP
   ports:
     - port: {{ .Values.rhs.service.port }}
-      targetPort: 8080
+      targetPort: {{ .Values.rhs.service.port }}
   selector:
     app: {{ include "reverse-hash-service.name" . }}-rhs

@@ -16,7 +16,7 @@ spec:
         - name: rhs
           image: {{ .Values.rhs.image.repository }}:{{ .Values.rhs.image.tag }}
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.rhs.service.port }}
           env:
             - name: RHS_DB
               value: "host={{ include "reverse-hash-service.fullname" . }}-db password={{ .Values.db.env.POSTGRES_PASSWORD }} user={{ .Values.db.env.POSTGRES_USER }} database=rhs"

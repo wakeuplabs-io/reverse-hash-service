@@ -12,4 +12,4 @@ spec:
       kind: Rule
       services:
         - name: {{ include "reverse-hash-service.fullname" . }}-rhs
-          port: 8080
+          port: {{ .Values.rhs.service.port }}

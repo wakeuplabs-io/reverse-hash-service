@@ -139,6 +139,14 @@ eksctl create cluster `
 aws eks --region us-east-1 update-kubeconfig --name rhs
 ```
 
+## Install CRD Definitions
+```
+# Install Traefik Resource Definitions:
+kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v3.1/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+
+# Install RBAC for Traefik:
+kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v3.1/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
+```
 
 ## Install helm
 
@@ -168,7 +176,7 @@ https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html
 
 ## Enable IAM OIDC provider
 ```
-eksctl utils associate-iam-oidc-provider --region=eu-central-1 --cluster=YourClusterNameHere --approve
+eksctl utils associate-iam-oidc-provider --region=eu-central-1 --cluster=rhs --approve
 ```
 ## Create Amazon EBS CSI driver IAM role
 ```
