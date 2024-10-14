@@ -1,0 +1,28 @@
+rhs:
+  image:
+    repository: wakeuplabs/reverse-hash-service
+    tag: 1.0.0
+  service:
+    port: 8080
+
+db:
+  image:
+    repository: postgres
+    tag: 17-alpine
+  env:
+    POSTGRES_PASSWORD: secret
+    POSTGRES_USER: iden3
+    POSTGRES_DB: rhs
+  persistence:
+    storageClass: gp2
+    size: 5Gi
+
+traefik:
+  ports:
+    web:
+      exposedPort: 80
+    websecure:
+      exposedPort: 443
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"  # or "alb" based on your setup

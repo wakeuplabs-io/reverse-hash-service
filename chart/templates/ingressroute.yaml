@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "reverse-hash-service.fullname" . }}-ingress
+  labels:
+      app: {{ include "reverse-hash-service.name" . }}-ingress
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/node`)
+      kind: Rule
+      services:
+        - name: {{ include "reverse-hash-service.fullname" . }}-rhs
+          port: {{ .Values.rhs.service.port }}
